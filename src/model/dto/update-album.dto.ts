@@ -3,11 +3,11 @@ import { IsNumber, IsOptional, IsString, IsUUID, ValidateIf } from 'class-valida
 export class UpdateAlbumDto {
 	@IsString()
 	@IsOptional()
-	name: string;
+	name?: string;
 
 	@IsNumber()
 	@IsOptional()
-  year: number;
+  year?: number;
 
 	@ValidateIf(dto => dto.artistId !== null)
 	@IsUUID()

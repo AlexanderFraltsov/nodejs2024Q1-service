@@ -2,10 +2,19 @@ import { Injectable } from '@nestjs/common';
 
 import { CreateArtistDto, UpdateArtistDto } from 'src/model';
 import { ArtistEntity } from '../entities/artist.entity';
+import { AlbumRepository } from './album.repository';
+import { TrackRepository } from './track.repository';
+import { FavoritesRepository } from './favorites.repository';
 
 @Injectable()
 export class ArtistRepository {
 	table: ArtistEntity[];
+
+	constructor(
+		private readonly albumRepository: AlbumRepository,
+		private readonly trackRepository: TrackRepository,
+		private readonly favoritesRepository: FavoritesRepository,
+	) {}
 
 	create(dto: CreateArtistDto) {
 		const entity = new ArtistEntity(dto);
@@ -28,6 +37,17 @@ export class ArtistRepository {
 		if (!entity) {
 			throw new Error('Entity is not exist');
 		}
+
+		this.favoritesRepository.deleteArtist(id);
+		const albums = this.albumRepository.findManyBy('artistId', id);
+		const tracks = this.trackRepository.findManyBy('artistId', id);
+		albums.forEach(({ id }) => this.albumRepository.update(id, {
+			artistId: null,
+		}));
+		tracks.forEach(({ id }) => this.trackRepository.update(id, {
+			artistId: null,
+		}));
+
 		this.table = this.table.filter(entity => entity.id !== id);
 		return true;
 	}

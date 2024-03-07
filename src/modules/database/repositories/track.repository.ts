@@ -2,11 +2,16 @@ import { Injectable } from '@nestjs/common';
 
 import { CreateTrackDto, UpdateTrackDto } from 'src/model';
 import { TrackEntity } from '../entities/track.entity';
+import { FavoritesRepository } from './favorites.repository';
 
 
 @Injectable()
 export class TrackRepository {
 	table: TrackEntity[];
+
+	constructor(
+		private readonly favoritesRepository: FavoritesRepository,
+	) {}
 
 	create(dto: CreateTrackDto) {
 		const entity = new TrackEntity(dto);
@@ -29,6 +34,7 @@ export class TrackRepository {
 		if (!entity) {
 			throw new Error('Entity is not exist');
 		}
+		this.favoritesRepository.deleteTrack(id);
 		this.table = this.table.filter(entity => entity.id !== id);
 		return true;
 	}

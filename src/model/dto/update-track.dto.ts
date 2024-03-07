@@ -3,11 +3,11 @@ import { IsNumber, IsOptional, IsString, IsUUID, ValidateIf } from 'class-valida
 export class UpdateTrackDto {
 	@IsString()
 	@IsOptional()
-	name: string;
+	name?: string;
 
 	@IsNumber()
 	@IsOptional()
-  duration: number;
+  duration?: number;
 
 	@ValidateIf(dto => dto.artistId !== null)
 	@IsUUID()
