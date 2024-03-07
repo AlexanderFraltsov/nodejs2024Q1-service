@@ -36,6 +36,10 @@ export class UserRepository {
 		return this.table.find(entity => entity[param] === value);
 	}
 
+	findManyBy<T>(param: string, value: T) {
+		return this.table.filter(entity => entity[param] === value);
+	}
+
 	findAll() {
 		return this.table;
 	}

@@ -1,19 +1,19 @@
 import { Injectable } from '@nestjs/common';
 
-import { CreateArtistDto, UpdateArtistDto } from 'src/model';
-import { ArtistEntity } from '../entities/artist.entity';
+import { CreateAlbumDto, UpdateAlbumDto } from 'src/model';
+import { AlbumEntity } from '../entities/album.entity';
 
 @Injectable()
-export class ArtistRepository {
-	table: ArtistEntity[];
+export class AlbumRepository {
+	table: AlbumEntity[];
 
-	create(dto: CreateArtistDto) {
-		const entity = new ArtistEntity(dto);
+	create(dto: CreateAlbumDto) {
+		const entity = new AlbumEntity(dto);
 		this.table.push(entity);
 		return entity;
 	}
 
-	update(id: string, dto: UpdateArtistDto) {
+	update(id: string, dto: UpdateAlbumDto) {
 		const entity = this.findOneBy('id', id);
 		if (!entity) {
 			throw new Error('Entity is not exist');
