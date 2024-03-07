@@ -1,7 +1,6 @@
 import { v4 } from 'uuid';
 
 import { IUser, CreateUserDto, UpdateUserDto } from 'src/model';
-import { ForbiddenException } from '@nestjs/common';
 
 export class UserEntity implements IUser {
 	constructor(dto: CreateUserDto) {
