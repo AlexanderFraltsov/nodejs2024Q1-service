@@ -12,9 +12,10 @@ export class FavoritesRepository {
 
 	addArtist(artistId: string) {
 		if (this.table.artists.some(id => artistId === id)) {
-			throw new Error('Artist is already added');
+			return false;
 		}
 		this.table.artists.push(artistId);
+		return true;
 	}
 
 	deleteArtist(artistId: string) {
@@ -27,9 +28,10 @@ export class FavoritesRepository {
 
 	addAlbum(albumId: string) {
 		if (this.table.albums.some(id => albumId === id)) {
-			throw new Error('Album is already added');
+			return false;
 		}
 		this.table.albums.push(albumId);
+		return true;
 	}
 
 	deleteAlbum(albumId: string) {
@@ -42,9 +44,10 @@ export class FavoritesRepository {
 
 	addTrack(trackId: string) {
 		if (this.table.tracks.some(id => trackId === id)) {
-			throw new Error('Track is already added');
+			return false;
 		}
 		this.table.tracks.push(trackId);
+		return true;
 	}
 
 	deleteTrack(trackId: string) {

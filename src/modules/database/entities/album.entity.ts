@@ -33,7 +33,7 @@ export class AlbumEntity implements IAlbum {
 		if (year) {
 			this.year = year;
 		}
-		if (artistId) {
+		if (artistId !== undefined) {
 			this.artistId = artistId;
 		}
 		return this;

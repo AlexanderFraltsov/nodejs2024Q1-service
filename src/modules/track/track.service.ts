@@ -27,8 +27,8 @@ export class TrackService {
 	}
 
 	async update(id: string, dto: UpdateTrackDto): Promise<ITrack> {
-		const user = this.trackRepository.findOneBy('id', id);
-		if (!user) {
+		const track = this.trackRepository.findOneBy('id', id);
+		if (!track) {
 			throw new NotFoundException('Track doesn\'t exist!');
 		}
 		const updatedTrack = this.trackRepository.update(id, dto);

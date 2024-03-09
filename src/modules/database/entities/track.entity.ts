@@ -38,10 +38,10 @@ export class TrackEntity implements ITrack {
 		if (duration) {
 			this.duration = duration;
 		}
-		if (artistId) {
+		if (artistId !== undefined) {
 			this.artistId = artistId;
 		}
-		if (albumId) {
+		if (albumId !== undefined) {
 			this.albumId = albumId;
 		}
 		return this;

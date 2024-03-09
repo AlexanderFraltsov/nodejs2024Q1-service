@@ -52,6 +52,10 @@ export class ArtistRepository {
 		return this.table.filter(entity => entity[param] === value);
 	}
 
+	findManyByIds(ids: string[]) {
+		return this.table.filter(({ id }) => ids.includes(id));
+	}
+
 	findAll() {
 		return this.table;
 	}
