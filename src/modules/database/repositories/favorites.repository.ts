@@ -4,7 +4,11 @@ import { IFavorites } from 'src/model';
 
 @Injectable()
 export class FavoritesRepository {
-	table: IFavorites;
+	table: IFavorites = {
+		albums: [],
+		artists: [],
+		tracks: [],
+	};
 
 	addArtist(artistId: string) {
 		if (this.table.artists.some(id => artistId === id)) {
@@ -15,7 +19,7 @@ export class FavoritesRepository {
 
 	deleteArtist(artistId: string) {
 		if (!this.table.artists.some(id => artistId === id)) {
-			throw new Error('Artist is not in favorites');
+			return false;
 		}
 		this.table.artists = this.table.artists.filter(id => artistId !== id);
 		return true;
@@ -30,7 +34,7 @@ export class FavoritesRepository {
 
 	deleteAlbum(albumId: string) {
 		if (!this.table.albums.some(id => albumId === id)) {
-			throw new Error('Album is not in favorites');
+			return false;
 		}
 		this.table.albums = this.table.albums.filter(id => albumId !== id);
 		return true;
@@ -45,7 +49,7 @@ export class FavoritesRepository {
 
 	deleteTrack(trackId: string) {
 		if (!this.table.tracks.some(id => trackId === id)) {
-			throw new Error('Track is not in favorites');
+			return false;
 		}
 		this.table.tracks = this.table.tracks.filter(id => trackId !== id);
 		return true;

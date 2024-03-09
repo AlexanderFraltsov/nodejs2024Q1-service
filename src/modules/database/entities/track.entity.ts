@@ -13,9 +13,9 @@ export class TrackEntity implements ITrack {
 
   duration: number;
 
-	artistId: string | null;
+	artistId: string | null = null;
 
-	albumId: string | null;
+	albumId: string | null = null;
 
 	create({ name, albumId, artistId, duration }: CreateTrackDto) {
 		this.id = v4();

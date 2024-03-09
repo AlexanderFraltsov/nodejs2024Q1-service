@@ -13,7 +13,7 @@ export class AlbumEntity implements IAlbum {
 
   year: number;
 
-	artistId: string | null;
+	artistId: string | null = null;
 
 	create({ name, year, artistId }: CreateAlbumDto) {
 		this.id = v4();

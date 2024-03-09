@@ -5,7 +5,7 @@ import { UserEntity } from '../entities/user.entity';
 
 @Injectable()
 export class UserRepository {
-	table: UserEntity[];
+	table: UserEntity[] = [];
 
 	create(dto: CreateUserDto) {
 		const entity = new UserEntity(dto);
@@ -15,19 +15,12 @@ export class UserRepository {
 
 	update(id: string, dto: UpdateUserDto) {
 		const entity = this.findOneBy('id', id);
-		if (!entity) {
-			throw new Error('Entity is not exist');
-		}
 		const updatedEntity = entity.update(dto);
 		this.table = this.table.map(entity => entity.id === id ? updatedEntity : entity);
 		return updatedEntity;
 	}
 
 	delete(id: string) {
-		const entity = this.findOneBy('id', id);
-		if (!entity) {
-			throw new Error('Entity is not exist');
-		}
 		this.table = this.table.filter(entity => entity.id !== id);
 		return true;
 	}

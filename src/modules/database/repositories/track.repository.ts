@@ -7,7 +7,7 @@ import { FavoritesRepository } from './favorites.repository';
 
 @Injectable()
 export class TrackRepository {
-	table: TrackEntity[];
+	table: TrackEntity[] = [];
 
 	constructor(
 		private readonly favoritesRepository: FavoritesRepository,
@@ -21,19 +21,12 @@ export class TrackRepository {
 
 	update(id: string, dto: UpdateTrackDto) {
 		const entity = this.findOneBy('id', id);
-		if (!entity) {
-			throw new Error('Entity is not exist');
-		}
 		const updatedEntity = entity.update(dto);
 		this.table = this.table.map(entity => entity.id === id ? updatedEntity : entity);
 		return updatedEntity;
 	}
 
 	delete(id: string) {
-		const entity = this.findOneBy('id', id);
-		if (!entity) {
-			throw new Error('Entity is not exist');
-		}
 		this.favoritesRepository.deleteTrack(id);
 		this.table = this.table.filter(entity => entity.id !== id);
 		return true;
