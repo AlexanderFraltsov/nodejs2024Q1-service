@@ -1,9 +1,12 @@
+import { readFile } from 'node:fs/promises';
+import { parse } from 'yaml';
+import { join } from 'path'
+
 import { ConfigService } from '@nestjs/config';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-
+import { SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './http-exception.filter';
 
@@ -18,16 +21,19 @@ async function bootstrap() {
   const { httpAdapter } = app.get(HttpAdapterHost);
   app.useGlobalFilters(new HttpExceptionFilter(httpAdapter));
 
-  const config = new DocumentBuilder()
-    .setTitle('Rest service')
-    .setDescription('The Rest service API description')
-    .setVersion('1.0')
-    .addBearerAuth()
-    .build();
+	const yamlFile = await readFile(join(__dirname, '..', 'doc', 'api.yaml'), { encoding: 'utf-8' })
+	const document = parse(yamlFile);
 
-  const document = SwaggerModule.createDocument(app, config, {
-    deepScanRoutes: true,
-  });
+  // const config = new DocumentBuilder()
+  //   .setTitle('Rest service')
+  //   .setDescription('The Rest service API description')
+  //   .setVersion('1.0')
+  //   .addBearerAuth()
+  //   .build();
+
+  // const document = SwaggerModule.createDocument(app, config, {
+  //   deepScanRoutes: true,
+  // });
 
 	const SWAGGER_PATH = '/api';
   SwaggerModule.setup(SWAGGER_PATH, app, document);
