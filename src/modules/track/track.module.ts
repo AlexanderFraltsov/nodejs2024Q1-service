@@ -4,8 +4,8 @@ import { TrackController } from './track.controller';
 import { TrackService } from './track.service';
 
 @Module({
-	imports: [DataBaseModule],
-	providers: [TrackService],
-	controllers: [TrackController],
+  imports: [DataBaseModule],
+  providers: [TrackService],
+  controllers: [TrackController],
 })
 export class TrackModule {}

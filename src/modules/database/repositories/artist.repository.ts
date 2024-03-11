@@ -8,55 +8,61 @@ import { FavoritesRepository } from './favorites.repository';
 
 @Injectable()
 export class ArtistRepository {
-	table: ArtistEntity[] = [];
+  table: ArtistEntity[] = [];
 
-	constructor(
-		private readonly albumRepository: AlbumRepository,
-		private readonly trackRepository: TrackRepository,
-		private readonly favoritesRepository: FavoritesRepository,
-	) {}
+  constructor(
+    private readonly albumRepository: AlbumRepository,
+    private readonly trackRepository: TrackRepository,
+    private readonly favoritesRepository: FavoritesRepository,
+  ) {}
 
-	create(dto: CreateArtistDto) {
-		const entity = new ArtistEntity(dto);
-		this.table.push(entity);
-		return entity;
-	}
+  create(dto: CreateArtistDto) {
+    const entity = new ArtistEntity(dto);
+    this.table.push(entity);
+    return entity;
+  }
 
-	update(id: string, dto: UpdateArtistDto) {
-		const entity = this.findOneBy('id', id);
-		const updatedEntity = entity.update(dto);
-		this.table = this.table.map(entity => entity.id === id ? updatedEntity : entity);
-		return updatedEntity;
-	}
+  update(id: string, dto: UpdateArtistDto) {
+    const entity = this.findOneBy('id', id);
+    const updatedEntity = entity.update(dto);
+    this.table = this.table.map((entity) =>
+      entity.id === id ? updatedEntity : entity,
+    );
+    return updatedEntity;
+  }
 
-	delete(id: string) {
-		this.favoritesRepository.deleteArtist(id);
-		const albums = this.albumRepository.findManyBy('artistId', id);
-		const tracks = this.trackRepository.findManyBy('artistId', id);
-		albums.forEach(({ id }) => this.albumRepository.update(id, {
-			artistId: null,
-		}));
-		tracks.forEach(({ id }) => this.trackRepository.update(id, {
-			artistId: null,
-		}));
+  delete(id: string) {
+    this.favoritesRepository.deleteArtist(id);
+    const albums = this.albumRepository.findManyBy('artistId', id);
+    const tracks = this.trackRepository.findManyBy('artistId', id);
+    albums.forEach(({ id }) =>
+      this.albumRepository.update(id, {
+        artistId: null,
+      }),
+    );
+    tracks.forEach(({ id }) =>
+      this.trackRepository.update(id, {
+        artistId: null,
+      }),
+    );
 
-		this.table = this.table.filter(entity => entity.id !== id);
-		return true;
-	}
+    this.table = this.table.filter((entity) => entity.id !== id);
+    return true;
+  }
 
-	findOneBy<T>(param: string, value: T) {
-		return this.table.find(entity => entity[param] === value);
-	}
+  findOneBy<T>(param: string, value: T) {
+    return this.table.find((entity) => entity[param] === value);
+  }
 
-	findManyBy<T>(param: string, value: T) {
-		return this.table.filter(entity => entity[param] === value);
-	}
+  findManyBy<T>(param: string, value: T) {
+    return this.table.filter((entity) => entity[param] === value);
+  }
 
-	findManyByIds(ids: string[]) {
-		return this.table.filter(({ id }) => ids.includes(id));
-	}
+  findManyByIds(ids: string[]) {
+    return this.table.filter(({ id }) => ids.includes(id));
+  }
 
-	findAll() {
-		return this.table;
-	}
+  findAll() {
+    return this.table;
+  }
 }

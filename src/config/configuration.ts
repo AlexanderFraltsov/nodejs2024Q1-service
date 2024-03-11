@@ -14,8 +14,8 @@ export default () => {
     jwt: {
       secret: JWT_SECRET_KEY,
       expiresIn: TOKEN_EXPIRE_TIME || '1h',
-			refreshSecret: JWT_SECRET_REFRESH_KEY,
-			refreshExpiresIn: TOKEN_REFRESH_EXPIRE_TIME || '24h',
+      refreshSecret: JWT_SECRET_REFRESH_KEY,
+      refreshExpiresIn: TOKEN_REFRESH_EXPIRE_TIME || '24h',
     },
   };
 };

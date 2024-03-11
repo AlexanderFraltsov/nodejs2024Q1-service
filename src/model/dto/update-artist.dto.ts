@@ -1,11 +1,11 @@
 import { IsBoolean, IsOptional, IsString } from 'class-validator';
 
 export class UpdateArtistDto {
-	@IsString()
-	@IsOptional()
-	name?: string;
+  @IsString()
+  @IsOptional()
+  name?: string;
 
-	@IsBoolean()
-	@IsOptional()
+  @IsBoolean()
+  @IsOptional()
   grammy?: boolean;
 }
