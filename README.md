@@ -11,6 +11,11 @@
 git clone {repository URL}
 ```
 
+## Checkout on dev branch
+```
+git checkout -b dev remotes/origin/develop
+```
+
 ## Installing NPM modules
 
 ```
