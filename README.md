@@ -11,9 +11,9 @@
 git clone {repository URL}
 ```
 
-## Checkout on dev branch
+## Checkout on task branch
 ```
-git checkout -b dev remotes/origin/develop
+git checkout -b task2 remotes/origin/task2
 ```
 
 ## Installing NPM modules
@@ -25,14 +25,30 @@ npm install
 ## Add environment file
 rename `.env.example` to `.env` file
 
-## Running application
+## Docker
+
+### Running application
 
 ```
-npm start
+npm run docker:up
 ```
 
 After starting the app on port (4000 as default) you can open
 in your browser OpenAPI documentation by typing http://localhost:4000/api/.
+Database logs are written in db-logs:/var/log/postgresql volume
+Database data is written to db-data:/var/lib/postrgesql/data volume
+
+### Stop and remove containers and networks
+
+```
+npm run docker:down
+```
+
+### Scan vulnerability
+
+```
+npm run docker:scout
+```
 
 ## Testing
 
@@ -60,6 +76,16 @@ To run only specific test suite with authorization
 
 ```
 npm run test:auth -- <path to suite>
+```
+
+## create migration file
+```
+npm run migration:generate src/migrations/<MIGRATION_NAME>
+```
+
+## run migrations
+```
+npm run migration:run
 ```
 
 ### Auto-fix and format

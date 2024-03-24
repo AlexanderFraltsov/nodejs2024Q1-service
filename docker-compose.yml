@@ -1,0 +1,50 @@
+version: '3'
+services:
+  database:
+    container_name: database
+    build:
+      context: ./database
+      dockerfile: Dockerfile
+    environment:
+      PGDATA: '${PGDATA}/pgdata'
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - ${POSTGRES_PORT}:5432
+    volumes:
+      - pg-data:${PGDATA}
+      - pg-logs:${PGLOGS}
+    restart: unless-stopped
+    networks:
+      - ${NETWORK}
+
+  app:
+    container_name: app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      POSTGRES_HOST: database
+      POSTGRES_PORT: 5432
+    depends_on:
+      - database
+    volumes:
+      - ./src:/usr/src/app/src # any change to base folder should be reflected
+    ports:
+      - '${PORT}:${PORT}'
+    command: ["npm", "run", "start:dev"]
+    restart: unless-stopped
+    networks:
+      - ${NETWORK}
+
+networks:
+  app-net:
+    name: ${NETWORK}
+    driver: ${NETWORK_DRIVER}
+
+volumes:
+  pg-data:
+  pg-logs:
