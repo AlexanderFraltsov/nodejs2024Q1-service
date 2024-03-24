@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
-import { DataBaseModule } from '../database/database.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { AlbumController } from './album.controller';
 import { AlbumService } from './album.service';
+import { AlbumEntity } from './album.entity';
 
 @Module({
-  imports: [DataBaseModule],
+  imports: [TypeOrmModule.forFeature([AlbumEntity])],
   providers: [AlbumService],
   controllers: [AlbumController],
 })

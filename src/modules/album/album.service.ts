@@ -1,20 +1,25 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+
+import { Repository } from 'typeorm';
 
 import { CreateAlbumDto, IAlbum, UpdateAlbumDto } from 'src/model';
-import { AlbumRepository } from '../database/repositories/album.repository';
-import { AlbumEntity } from '../database/entities/album.entity';
+import { AlbumEntity } from './album.entity';
 
 @Injectable()
 export class AlbumService {
-  constructor(private readonly albumRepository: AlbumRepository) {}
+  constructor(
+		@InjectRepository(AlbumEntity)
+		private readonly albumRepository: Repository<AlbumEntity>,
+	) {}
 
   async getAll(): Promise<IAlbum[]> {
-    const albums = this.albumRepository.findAll();
+    const albums = await this.albumRepository.find();
     return albums.map(this.buildResponse);
   }
 
   async getOneById(id: string): Promise<IAlbum> {
-    const album = this.albumRepository.findOneBy('id', id);
+    const album = await this.albumRepository.findOneBy({ id });
     if (!album) {
       throw new NotFoundException("Album doesn't exist!");
     }
@@ -22,22 +27,23 @@ export class AlbumService {
   }
 
   async add(dto: CreateAlbumDto): Promise<IAlbum> {
-    const album = this.albumRepository.create(dto);
+    const album = await this.albumRepository.save(this.albumRepository.create(dto));
     return this.buildResponse(album);
   }
 
   async update(id: string, dto: UpdateAlbumDto): Promise<IAlbum> {
-    const album = this.albumRepository.findOneBy('id', id);
+    const album = await this.albumRepository.findOneBy({id});
     if (!album) {
       throw new NotFoundException("Album doesn't exist!");
     }
-    const updatedAlbum = this.albumRepository.update(id, dto);
+		const updatedAlbum = Object.assign(album, dto);
+    await this.albumRepository.save(updatedAlbum);
     return this.buildResponse(updatedAlbum);
   }
 
   async delete(id: string) {
     await this.getOneById(id);
-    this.albumRepository.delete(id);
+    await this.albumRepository.delete(id);
   }
 
   private buildResponse(entity: AlbumEntity): IAlbum {

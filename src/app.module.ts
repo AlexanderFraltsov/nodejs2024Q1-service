@@ -9,6 +9,9 @@ import { TrackModule } from './modules/track/track.module';
 import { AlbumModule } from './modules/album/album.module';
 import { ArtistModule } from './modules/artist/artist.module';
 import { FavoritesModule } from './modules/favorites/favorites.module';
+import { TrackEntity } from './modules/track/track.entity';
+import { AlbumEntity } from './modules/album/album.entity';
+import { ArtistEntity } from './modules/artist/artist.entity';
 
 @Module({
   imports: [
@@ -22,7 +25,12 @@ import { FavoritesModule } from './modules/favorites/favorites.module';
           type: 'postgres',
           synchronize: false,
           autoLoadEntities: true,
-          entities: [UserEntity],
+          entities: [
+						UserEntity,
+						TrackEntity,
+						AlbumEntity,
+						ArtistEntity,
+					],
           logging: false,
         };
       },
