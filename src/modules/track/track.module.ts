@@ -6,10 +6,8 @@ import { TrackService } from './track.service';
 import { TrackEntity } from './track.entity';
 
 @Module({
-  imports: [
-		TypeOrmModule.forFeature([TrackEntity]),
-	],
-  providers: [TrackService],
+  imports: [TypeOrmModule.forFeature([TrackEntity])],
   controllers: [TrackController],
+  providers: [TrackService],
 })
 export class TrackModule {}

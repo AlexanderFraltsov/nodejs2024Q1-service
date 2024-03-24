@@ -13,12 +13,12 @@ export class AlbumEntity {
   @Column({ type: 'integer' })
   year: number;
 
-	@ManyToOne(() => ArtistEntity, ({ id }) => id, {
-		onDelete: 'SET NULL',
-		nullable: true,
-	})
-	artist: ArtistEntity;
+  @ManyToOne(() => ArtistEntity, ({ id }) => id, {
+    onDelete: 'SET NULL',
+    nullable: true,
+  })
+  artist: ArtistEntity;
 
-	@Column({ type: 'uuid', nullable: true })
-	artistId: string;
+  @Column({ type: 'uuid', nullable: true })
+  artistId: string;
 }

@@ -14,21 +14,21 @@ export class TrackEntity {
   @Column({ type: 'integer' })
   duration: number;
 
-	@ManyToOne(() => AlbumEntity, ({ id }) => id, {
-		onDelete: 'SET NULL',
-		nullable: true,
-	})
-	album: AlbumEntity;
+  @ManyToOne(() => AlbumEntity, ({ id }) => id, {
+    onDelete: 'SET NULL',
+    nullable: true,
+  })
+  album: AlbumEntity;
 
-	@Column({ type: 'uuid', nullable: true })
-	albumId: string;
+  @Column({ type: 'uuid', nullable: true })
+  albumId: string;
 
-	@ManyToOne(() => ArtistEntity, ({ id }) => id, {
-		onDelete: 'SET NULL',
-		nullable: true,
-	})
-	artist: ArtistEntity;
+  @ManyToOne(() => ArtistEntity, ({ id }) => id, {
+    onDelete: 'SET NULL',
+    nullable: true,
+  })
+  artist: ArtistEntity;
 
-	@Column({ type: 'uuid', nullable: true })
-	artistId: string;
+  @Column({ type: 'uuid', nullable: true })
+  artistId: string;
 }

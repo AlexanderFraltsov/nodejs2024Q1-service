@@ -1,12 +1,24 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { DataBaseModule } from '../database/database.module';
 import { FavoritesController } from './favorites.controller';
 import { FavoritesService } from './favorites.service';
+import { FavoritesEntity } from './favorites.entity';
+import { ArtistEntity } from '../artist/artist.entity';
+import { AlbumEntity } from '../album/album.entity';
+import { TrackEntity } from '../track/track.entity';
 
 @Module({
-  imports: [DataBaseModule],
+  imports: [
+    TypeOrmModule.forFeature([
+      FavoritesEntity,
+      AlbumEntity,
+      ArtistEntity,
+      TrackEntity,
+    ]),
+  ],
   controllers: [FavoritesController],
   providers: [FavoritesService],
+  exports: [FavoritesService],
 })
 export class FavoritesModule {}

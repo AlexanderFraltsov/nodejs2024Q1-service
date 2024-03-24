@@ -9,8 +9,9 @@ import { TrackEntity } from './track.entity';
 @Injectable()
 export class TrackService {
   constructor(
-		@InjectRepository(TrackEntity)
-		private readonly trackRepository: Repository<TrackEntity>) {}
+    @InjectRepository(TrackEntity)
+    private readonly trackRepository: Repository<TrackEntity>,
+  ) {}
 
   async getAll(): Promise<ITrack[]> {
     const tracks = await this.trackRepository.find();
@@ -20,13 +21,15 @@ export class TrackService {
   async getOneById(id: string): Promise<ITrack> {
     const track = await this.trackRepository.findOneBy({ id });
     if (!track) {
-      throw new NotFoundException('Track doesn\'t exist!');
+      throw new NotFoundException("Track doesn't exist!");
     }
     return this.buildResponse(track);
   }
 
   async add(dto: CreateTrackDto): Promise<ITrack> {
-    const track = await this.trackRepository.save(this.trackRepository.create(dto));
+    const track = await this.trackRepository.save(
+      this.trackRepository.create(dto),
+    );
     return this.buildResponse(track);
   }
 
@@ -35,7 +38,7 @@ export class TrackService {
     if (!track) {
       throw new NotFoundException("Track doesn't exist!");
     }
-		const updatedTrack = Object.assign(track, dto);
+    const updatedTrack = Object.assign(track, dto);
     await this.trackRepository.save(updatedTrack);
     return this.buildResponse(updatedTrack);
   }

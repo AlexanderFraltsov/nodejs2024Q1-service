@@ -9,8 +9,9 @@ import { ArtistEntity } from './artist.entity';
 @Injectable()
 export class ArtistService {
   constructor(
-		@InjectRepository(ArtistEntity)
-		private readonly artistRepository: Repository<ArtistEntity>) {}
+    @InjectRepository(ArtistEntity)
+    private readonly artistRepository: Repository<ArtistEntity>,
+  ) {}
 
   async getAll(): Promise<IArtist[]> {
     const artists = await this.artistRepository.find();
@@ -18,8 +19,7 @@ export class ArtistService {
   }
 
   async getOneById(id: string): Promise<IArtist> {
-    const artist = await this.artistRepository.findOneBy(
-			{id});
+    const artist = await this.artistRepository.findOneBy({ id });
     if (!artist) {
       throw new NotFoundException("Artist doesn't exist!");
     }
@@ -27,16 +27,18 @@ export class ArtistService {
   }
 
   async add(dto: CreateArtistDto): Promise<IArtist> {
-    const artist = await this.artistRepository.save(this.artistRepository.create(dto));
+    const artist = await this.artistRepository.save(
+      this.artistRepository.create(dto),
+    );
     return this.buildResponse(artist);
   }
 
   async update(id: string, dto: UpdateArtistDto): Promise<IArtist> {
-    const artist = await this.artistRepository.findOneBy({id});
+    const artist = await this.artistRepository.findOneBy({ id });
     if (!artist) {
       throw new NotFoundException("Artist doesn't exist!");
     }
-		const updatedArtist = Object.assign(artist, dto);
+    const updatedArtist = Object.assign(artist, dto);
     await this.artistRepository.save(updatedArtist);
     return this.buildResponse(updatedArtist);
   }

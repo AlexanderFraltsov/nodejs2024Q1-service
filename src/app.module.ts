@@ -12,6 +12,7 @@ import { FavoritesModule } from './modules/favorites/favorites.module';
 import { TrackEntity } from './modules/track/track.entity';
 import { AlbumEntity } from './modules/album/album.entity';
 import { ArtistEntity } from './modules/artist/artist.entity';
+import { FavoritesEntity } from './modules/favorites/favorites.entity';
 
 @Module({
   imports: [
@@ -26,11 +27,12 @@ import { ArtistEntity } from './modules/artist/artist.entity';
           synchronize: false,
           autoLoadEntities: true,
           entities: [
-						UserEntity,
-						TrackEntity,
-						AlbumEntity,
-						ArtistEntity,
-					],
+            UserEntity,
+            TrackEntity,
+            AlbumEntity,
+            ArtistEntity,
+            FavoritesEntity,
+          ],
           logging: false,
         };
       },
