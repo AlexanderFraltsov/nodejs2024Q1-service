@@ -35,7 +35,7 @@ services:
       - ./src:/usr/src/app/src # any change to base folder should be reflected
     ports:
       - '${PORT}:${PORT}'
-    command: ["npm", "run", "start:dev"]
+    entrypoint: npm run start:dev
     restart: unless-stopped
     networks:
       - ${NETWORK}

@@ -19,6 +19,5 @@ import { TrackEntity } from '../track/track.entity';
   ],
   controllers: [FavoritesController],
   providers: [FavoritesService],
-  exports: [FavoritesService],
 })
 export class FavoritesModule {}
