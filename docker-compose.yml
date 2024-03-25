@@ -2,6 +2,7 @@ version: '3'
 services:
   database:
     container_name: database
+    image: fraltsov8as/nodejs2024q1-service-db
     build:
       context: ./database
       dockerfile: Dockerfile
@@ -21,6 +22,7 @@ services:
 
   app:
     container_name: app
+    image: fraltsov8as/nodejs2024q1-service
     build:
       context: .
       dockerfile: Dockerfile
@@ -31,12 +33,11 @@ services:
       POSTGRES_PORT: 5432
     depends_on:
       - database
-    volumes:
-      - ./src:/usr/src/app/src # any change to base folder should be reflected
     ports:
       - '${PORT}:${PORT}'
-    entrypoint: npm run start:dev
     restart: unless-stopped
+    volumes:
+      - ./src:/usr/src/app/src # any change to base folder should be reflected
     networks:
       - ${NETWORK}
 

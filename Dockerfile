@@ -15,3 +15,5 @@ WORKDIR /usr/src/app
 COPY --from=dev /usr/src/app/package*.json .
 COPY --from=dev /usr/src/app/node_modules ./node_modules
 COPY . .
+
+CMD npm run typeorm -- migration:run && npm run start:dev
