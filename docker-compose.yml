@@ -12,7 +12,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - ${POSTGRES_PORT}:5432
+      - ${POSTGRES_PORT}:${DEFAULT_POSTGRES_PORT}
     volumes:
       - pg-data:${PGDATA}
       - pg-logs:${PGLOGS}
@@ -35,7 +35,7 @@ services:
       - .env
     environment:
       POSTGRES_HOST: database
-      POSTGRES_PORT: 5432
+      POSTGRES_PORT: ${DEFAULT_POSTGRES_PORT}
     depends_on:
       - database
     ports:
