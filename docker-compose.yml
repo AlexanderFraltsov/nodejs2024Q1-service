@@ -26,6 +26,11 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    x-develop:
+      watch:
+        - action: sync
+          path: ./src
+          target: /usr/src/app/src
     env_file:
       - .env
     environment:
@@ -36,8 +41,7 @@ services:
     ports:
       - '${PORT}:${PORT}'
     restart: unless-stopped
-    volumes:
-      - ./src:/usr/src/app/src # any change to base folder should be reflected
+    working_dir: /usr/src/app
     networks:
       - ${NETWORK}
 

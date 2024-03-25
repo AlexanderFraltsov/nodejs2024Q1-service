@@ -33,6 +33,12 @@ rename `.env.example` to `.env` file
 npm run docker:up
 ```
 
+You can watch logs in other terminal:
+
+```
+docker-compose logs -f
+```
+
 After application running on port (4000 as default) you can open
 in your browser OpenAPI documentation by typing http://localhost:4000/api/.
 

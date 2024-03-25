@@ -21,7 +21,7 @@
     "migration:run": "npm run typeorm -- migration:run && docker-compose restart",
     "migration:revert": "npm run typeorm -- migration:revert",
     "docker:build": "docker-compose build",
-    "docker:up": "docker-compose up",
+    "docker:up": "docker-compose up -d && docker compose alpha watch",
     "docker:down": "docker-compose down",
     "docker:scan": "docker scout cves",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
