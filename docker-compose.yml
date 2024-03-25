@@ -1,0 +1,55 @@
+version: '3'
+services:
+  database:
+    container_name: database
+    image: fraltsov8as/nodejs2024q1-service-db
+    build:
+      context: ./database
+      dockerfile: Dockerfile
+    environment:
+      PGDATA: '${PGDATA}/pgdata'
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - ${POSTGRES_PORT}:${DEFAULT_POSTGRES_PORT}
+    volumes:
+      - pg-data:${PGDATA}
+      - pg-logs:${PGLOGS}
+    restart: unless-stopped
+    networks:
+      - ${NETWORK}
+
+  app:
+    container_name: app
+    image: fraltsov8as/nodejs2024q1-service
+    build:
+      context: .
+      dockerfile: Dockerfile
+    x-develop:
+      watch:
+        - action: sync
+          path: ./src
+          target: /usr/src/app/src
+    env_file:
+      - .env
+    environment:
+      POSTGRES_HOST: database
+      POSTGRES_PORT: ${DEFAULT_POSTGRES_PORT}
+    depends_on:
+      - database
+    ports:
+      - '${PORT}:${PORT}'
+    restart: unless-stopped
+    working_dir: /usr/src/app
+    networks:
+      - ${NETWORK}
+
+networks:
+  app-net:
+    name: ${NETWORK}
+    driver: ${NETWORK_DRIVER}
+
+volumes:
+  pg-data:
+  pg-logs:

@@ -3,22 +3,26 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 import { CreateUserDto, IUser, UpdateUserDto } from 'src/model';
-import { UserRepository } from '../database/repositories/user.repository';
-import { UserEntity } from '../database/entities/user.entity';
+import { UserEntity } from './user.entity';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    @InjectRepository(UserEntity)
+    private readonly userRepository: Repository<UserEntity>,
+  ) {}
 
   async getAll(): Promise<IUser[]> {
-    const users = this.userRepository.findAll();
+    const users = await this.userRepository.find();
     return users.map(this.buildResponse);
   }
 
   async getOneById(id: string): Promise<IUser> {
-    const user = this.userRepository.findOneBy('id', id);
+    const user = await this.userRepository.findOneBy({ id });
     if (!user) {
       throw new NotFoundException("User doesn't exist!");
     }
@@ -26,29 +30,37 @@ export class UserService {
   }
 
   async add(dto: CreateUserDto): Promise<IUser> {
-    const user = this.userRepository.create(dto);
+    const user = await this.userRepository.save(
+      this.userRepository.create(dto),
+    );
     return this.buildResponse(user);
   }
 
   async changePassword(id: string, dto: UpdateUserDto): Promise<IUser> {
-    const user = this.userRepository.findOneBy('id', id);
+    const user = await this.userRepository.findOneBy({ id });
     if (!user) {
       throw new NotFoundException("User doesn't exist!");
     }
     if (user.password !== dto.oldPassword) {
       throw new ForbiddenException("Password doesn't match!");
     }
-    const updatedUser = this.userRepository.update(id, dto);
-    return this.buildResponse(updatedUser);
+    await this.userRepository.save(
+      Object.assign(user, { password: dto.newPassword }),
+    );
+    return this.buildResponse(user);
   }
 
   async delete(id: string) {
     await this.getOneById(id);
-    this.userRepository.delete(id);
+    await this.userRepository.delete(id);
   }
 
   private buildResponse(entity: UserEntity): IUser {
-    const user = { ...entity };
+    const user: IUser = {
+      ...entity,
+      createdAt: entity.createdAt.getTime(),
+      updatedAt: entity.updatedAt.getTime(),
+    };
     delete user.password;
     return user;
   }
