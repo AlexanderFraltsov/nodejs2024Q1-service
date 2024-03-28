@@ -9,6 +9,8 @@ import { TrackModule } from './modules/track/track.module';
 import { AlbumModule } from './modules/album/album.module';
 import { ArtistModule } from './modules/artist/artist.module';
 import { FavoritesModule } from './modules/favorites/favorites.module';
+import { LoggerModule } from './modules/custom-logger/custom-logger.module';
+import { CustomLogger } from './modules/custom-logger/custom-logger.service';
 
 @Module({
   imports: [

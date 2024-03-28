@@ -31,6 +31,8 @@ services:
         - action: sync
           path: ./src
           target: /usr/src/app/src
+        - action: rebuild
+          path: package.json
     env_file:
       - .env
     environment:
