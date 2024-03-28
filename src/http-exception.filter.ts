@@ -15,14 +15,14 @@ export class HttpExceptionFilter extends BaseExceptionFilter {
       const status = exception.getStatus();
       const respData = JSON.stringify(exception.getResponse());
 
-      // this.logger.warn(
-      //   `${request.method} ${request.url} ${status} - ${exception.message} - ${respData}`,
-      // );
+      this.logger.warn(
+        `${request.method} ${request.url} ${status} - ${exception.message} - ${respData}`,
+      );
     } else {
       const message =
         exception instanceof Error ? exception.message : exception;
 
-      // this.logger.warn(`${request.method} ${request.url} - ${message}`);
+      this.logger.warn(`${request.method} ${request.url} - ${message}`);
     }
     super.catch(exception, host);
   }
