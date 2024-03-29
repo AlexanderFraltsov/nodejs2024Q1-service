@@ -9,20 +9,39 @@ import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { SwaggerModule } from '@nestjs/swagger';
 
 import { AppModule } from './app.module';
+import { CustomLogger } from './modules/logger/custom-logger.service';
 import { HttpExceptionFilter } from './http-exception.filter';
-import { CustomLogger } from './modules/custom-logger/custom-logger.service';
+import { LoggingInterceptor } from './modules/logger/logging.interceptor';
 
 async function bootstrap() {
-	const app = await NestFactory.create<NestExpressApplication>(AppModule);
+	const logger = new Logger('bootstrap');
+	// Command: call unhandledRejection
+	// (async () => {throw new Error('Some error')})()
+
+	// Command:  call uncaughtException
+	// setImmediate(() => {
+	// 	throw new Error('Some error');
+	// })
+
+	process.on('uncaughtException', (err) => {
+		logger.error(`Uncaught exception | ${err}`);
+	});
+
+	process.on('unhandledRejection', async (reason) => {
+		logger.error(`Unhandled promise rejection | ${reason}`);
+	});
+
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const { httpAdapter } = app.get(HttpAdapterHost);
   const configService = app.get(ConfigService);
   const port = configService.get('port');
-	app.useLogger(new CustomLogger());
+  app.useLogger(new CustomLogger());
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
   app.useGlobalFilters(new HttpExceptionFilter(httpAdapter));
+	app.useGlobalInterceptors(new LoggingInterceptor())
 
   const yamlFile = await readFile(join(__dirname, '..', 'doc', 'api.yaml'), {
-		encoding: 'utf-8',
+    encoding: 'utf-8',
   });
   const document = parse(yamlFile);
 
@@ -31,10 +50,11 @@ async function bootstrap() {
 
   await app.listen(port);
 
-	const logger = new Logger('bootstrap');
   logger.log(`The application is running on the port: ${port}`);
   logger.log(
     `The swagger available on http://localhost:${port}${SWAGGER_PATH}`,
   );
+
+
 }
 bootstrap();
