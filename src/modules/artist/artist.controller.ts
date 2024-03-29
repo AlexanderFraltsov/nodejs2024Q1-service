@@ -9,11 +9,18 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
+	UseGuards,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 
 import { ArtistService } from './artist.service';
 import { CreateArtistDto, IArtist, UpdateArtistDto } from 'src/model';
+import { AuthGuard } from '../auth/auth.guard';
 
+@ApiBearerAuth()
+@ApiUnauthorizedResponse({ description: 'Unautorized' })
+@ApiTags('Artist')
+@UseGuards(AuthGuard)
 @Controller('artist')
 export class ArtistController {
   constructor(private readonly artistService: ArtistService) {}

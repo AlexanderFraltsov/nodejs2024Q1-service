@@ -10,7 +10,7 @@ enum LogColors {
 }
 
 @Injectable()
-export class CustomLogger extends ConsoleLogger {
+export class LoggingService extends ConsoleLogger {
   private getColoredText(text: string, color: LogColors) {
     return `${color}${text}${ENDING}`;
   }

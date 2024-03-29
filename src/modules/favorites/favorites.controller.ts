@@ -7,10 +7,17 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
+	UseGuards,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 
 import { FavoritesService } from './favorites.service';
+import { AuthGuard } from '../auth/auth.guard';
 
+@ApiBearerAuth()
+@ApiUnauthorizedResponse({ description: 'Unautorized' })
+@ApiTags('Favorites')
+@UseGuards(AuthGuard)
 @Controller('favs')
 export class FavoritesController {
   constructor(private readonly favoritesService: FavoritesService) {}
