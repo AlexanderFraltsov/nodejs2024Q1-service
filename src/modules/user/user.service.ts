@@ -17,7 +17,7 @@ export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
-		private readonly configService: ConfigService,
+    private readonly configService: ConfigService,
   ) {}
 
   async getAll(): Promise<IUser[]> {
@@ -33,18 +33,21 @@ export class UserService {
     return this.buildResponse(user);
   }
 
-	async getOneByLogin(login: string) {
-		const user = await this.userRepository.findOneBy({ login });
-		if (!user) {
+  async getOneByLogin(login: string) {
+    const user = await this.userRepository.findOneBy({ login });
+    if (!user) {
       throw new NotFoundException("User doesn't exist!");
     }
-    return {...user};
-	}
+    return { ...user };
+  }
 
   async add(dto: CreateUserDto): Promise<IUser> {
-		const password = await createHash(dto.password, this.configService.get('cryptSalt'));
+    const password = await createHash(
+      dto.password,
+      this.configService.get('cryptSalt'),
+    );
     const user = await this.userRepository.save(
-      this.userRepository.create({...dto, password}),
+      this.userRepository.create({ ...dto, password }),
     );
     return this.buildResponse(user);
   }
@@ -54,15 +57,19 @@ export class UserService {
     if (!user) {
       throw new NotFoundException("User doesn't exist!");
     }
-		const isPasswordMatch = await compareWithHashed(dto.oldPassword, user.password)
+    const isPasswordMatch = await compareWithHashed(
+      dto.oldPassword,
+      user.password,
+    );
     if (!isPasswordMatch) {
       throw new ForbiddenException("Password doesn't match!");
     }
-		const password = await createHash(dto.newPassword, this.configService.get('cryptSalt'));
-
-    await this.userRepository.save(
-      Object.assign(user, { password }),
+    const password = await createHash(
+      dto.newPassword,
+      this.configService.get('cryptSalt'),
     );
+
+    await this.userRepository.save(Object.assign(user, { password }));
     return this.buildResponse(user);
   }
 

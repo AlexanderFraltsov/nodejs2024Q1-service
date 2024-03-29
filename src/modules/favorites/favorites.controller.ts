@@ -7,9 +7,13 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
-	UseGuards,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 
 import { FavoritesService } from './favorites.service';
 import { AuthGuard } from '../auth/auth.guard';

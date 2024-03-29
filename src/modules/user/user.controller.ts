@@ -9,9 +9,13 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
-	UseGuards,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 
 import { CreateUserDto, IUser, UpdateUserDto } from 'src/model';
 import { UserService } from './user.service';
