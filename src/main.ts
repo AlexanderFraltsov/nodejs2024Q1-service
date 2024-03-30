@@ -42,7 +42,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
   app.useGlobalFilters(new HttpExceptionFilter(httpAdapter));
   app.useGlobalInterceptors(new LoggingInterceptor());
-	app.useGlobalGuards(new AuthGuard(jwtService));
+  app.useGlobalGuards(new AuthGuard(jwtService));
 
   // const yamlFile = await readFile(join(__dirname, '..', 'doc', 'api.yaml'), {
   //   encoding: 'utf-8',

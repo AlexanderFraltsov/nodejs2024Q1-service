@@ -13,18 +13,26 @@ export class AuthGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request: Request = context.switchToHttp().getRequest();
-		const ALLOWED_PATHS = [
-			{ method: 'GET', url: '/' },
-			{ method: 'GET', url: '/doc' },
-			{ method: 'POST', url: '/auth/login' },
-			{ method: 'POST', url: '/auth/signup' },
-			{ method: 'POST', url: '/auth/refresh' },
-		];
-		const { route: { path }, method } = request;
+    const ALLOWED_PATHS = [
+      { method: 'GET', url: '/' },
+      { method: 'GET', url: '/doc' },
+      { method: 'POST', url: '/auth/login' },
+      { method: 'POST', url: '/auth/signup' },
+      { method: 'POST', url: '/auth/refresh' },
+    ];
+    const {
+      route: { path },
+      method,
+    } = request;
 
-		if (ALLOWED_PATHS.some((allowedPath) => method === allowedPath.method && path ===	allowedPath.url)) {
-			return true;
-		}
+    if (
+      ALLOWED_PATHS.some(
+        (allowedPath) =>
+          method === allowedPath.method && path === allowedPath.url,
+      )
+    ) {
+      return true;
+    }
     const token = this.extractTokenFromHeader(request);
     if (!token) {
       throw new UnauthorizedException();
