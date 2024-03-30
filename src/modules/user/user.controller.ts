@@ -9,21 +9,18 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
-  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiTags,
-  ApiUnauthorizedResponse,
+	ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 
 import { CreateUserDto, IUser, UpdateUserDto } from 'src/model';
 import { UserService } from './user.service';
-import { AuthGuard } from '../auth/auth.guard';
 
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: 'Unautorized' })
-@UseGuards(AuthGuard)
 @ApiTags('User')
 @Controller('user')
 export class UserController {

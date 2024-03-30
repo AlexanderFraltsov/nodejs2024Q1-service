@@ -9,7 +9,6 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
-  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -19,12 +18,10 @@ import {
 
 import { CreateTrackDto, ITrack, UpdateTrackDto } from 'src/model';
 import { TrackService } from './track.service';
-import { AuthGuard } from '../auth/auth.guard';
 
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: 'Unautorized' })
 @ApiTags('Track')
-@UseGuards(AuthGuard)
 @Controller('track')
 export class TrackController {
   constructor(private readonly trackService: TrackService) {}

@@ -12,6 +12,8 @@ import { AppModule } from './app.module';
 import { LoggingService } from './modules/logger/logging.service';
 import { HttpExceptionFilter } from './http-exception.filter';
 import { LoggingInterceptor } from './modules/logger/logging.interceptor';
+import { AuthGuard } from './modules/auth/auth.guard';
+import { JwtService } from '@nestjs/jwt';
 
 async function bootstrap() {
   const logger = new Logger('bootstrap');
@@ -34,11 +36,13 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const { httpAdapter } = app.get(HttpAdapterHost);
   const configService = app.get(ConfigService);
+  const jwtService = app.get(JwtService);
   const port = configService.get('port');
   app.useLogger(new LoggingService());
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
   app.useGlobalFilters(new HttpExceptionFilter(httpAdapter));
   app.useGlobalInterceptors(new LoggingInterceptor());
+	app.useGlobalGuards(new AuthGuard(jwtService));
 
   // const yamlFile = await readFile(join(__dirname, '..', 'doc', 'api.yaml'), {
   //   encoding: 'utf-8',

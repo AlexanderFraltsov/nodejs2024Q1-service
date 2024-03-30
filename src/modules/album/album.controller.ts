@@ -9,7 +9,6 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
-  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -17,14 +16,12 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 
-import { AlbumService } from './album.service';
 import { CreateAlbumDto, IAlbum, UpdateAlbumDto } from 'src/model';
-import { AuthGuard } from '../auth/auth.guard';
+import { AlbumService } from './album.service';
 
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: 'Unautorized' })
 @ApiTags('Album')
-@UseGuards(AuthGuard)
 @Controller('album')
 export class AlbumController {
   constructor(private readonly albumService: AlbumService) {}

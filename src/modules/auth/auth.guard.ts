@@ -12,7 +12,19 @@ export class AuthGuard implements CanActivate {
   constructor(private readonly jwtService: JwtService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest();
+    const request: Request = context.switchToHttp().getRequest();
+		const ALLOWED_PATHS = [
+			{ method: 'GET', url: '/' },
+			{ method: 'GET', url: '/doc' },
+			{ method: 'POST', url: '/auth/login' },
+			{ method: 'POST', url: '/auth/signup' },
+			{ method: 'POST', url: '/auth/refresh' },
+		];
+		const { route: { path }, method } = request;
+		console.log(method, path)
+		if (ALLOWED_PATHS.some((allowedPath) => method === allowedPath.method && path ===	allowedPath.url)) {
+			return true;
+		}
     const token = this.extractTokenFromHeader(request);
     if (!token) {
       throw new UnauthorizedException();
@@ -23,8 +35,6 @@ export class AuthGuard implements CanActivate {
       if (!payload.userId || !payload.login) {
         throw new UnauthorizedException();
       }
-
-      request.session = payload;
     } catch {
       throw new UnauthorizedException();
     }
