@@ -21,7 +21,7 @@ export class AuthGuard implements CanActivate {
 			{ method: 'POST', url: '/auth/refresh' },
 		];
 		const { route: { path }, method } = request;
-		console.log(method, path)
+
 		if (ALLOWED_PATHS.some((allowedPath) => method === allowedPath.method && path ===	allowedPath.url)) {
 			return true;
 		}
