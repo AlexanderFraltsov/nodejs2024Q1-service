@@ -11,6 +11,8 @@ export default () => {
     POSTGRES_USER,
     POSTGRES_PASSWORD,
     POSTGRES_DB,
+    LOGGER_MAX_LEVEL,
+    LOGGER_MAX_FILESIZE,
   } = process.env;
 
   return {
@@ -28,6 +30,10 @@ export default () => {
       database: POSTGRES_DB,
       username: POSTGRES_USER,
       password: POSTGRES_PASSWORD,
+    },
+    logger: {
+      maxLevel: parseInt(LOGGER_MAX_LEVEL, 10) || 2,
+      maxFilesize: parseInt(LOGGER_MAX_FILESIZE, 10) || 102400,
     },
   };
 };

@@ -1,4 +1,7 @@
-import { ConsoleLogger, Injectable } from '@nestjs/common';
+import { ConsoleLogger, Injectable, LogLevel } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+
+import { Subject } from 'rxjs';
 
 const ENDING = '\x1b[0m';
 enum LogColors {
@@ -11,6 +14,55 @@ enum LogColors {
 
 @Injectable()
 export class LoggingService extends ConsoleLogger {
+  constructor(
+    private readonly configService: ConfigService,
+    private logsQueue: Subject<string>,
+    private errorsQueue: Subject<string>,
+  ) {
+    super();
+
+    const { maxLevel } = this.configService.get<{
+      maxLevel: number;
+    }>('logger');
+
+    if (maxLevel <= 4) {
+      const allLogLevels: LogLevel[] = [
+        'verbose',
+        'debug',
+        'log',
+        'warn',
+        'error',
+      ];
+
+      this.setLogLevels(allLogLevels.slice(4 - maxLevel));
+    }
+  }
+
+  log(message: any, stack?: string) {
+    this.writeLog(message, stack, 'log');
+    super.log(this.getColoredMessage(message, stack, LogColors.GREEN));
+  }
+
+  error(message: any, stack?: string) {
+    this.writeLog(message, stack, 'error');
+    super.error(this.getColoredMessage(message, stack, LogColors.RED));
+  }
+
+  warn(message: any, stack?: string) {
+    this.writeLog(message, stack, 'warn');
+    super.warn(this.getColoredMessage(message, stack, LogColors.YELLOW));
+  }
+
+  verbose(message: any, stack?: string) {
+    this.writeLog(message, stack, 'verbose');
+    super.verbose(this.getColoredMessage(message, stack, LogColors.CYAN));
+  }
+
+  debug(message: any, stack?: string) {
+    this.writeLog(message, stack, 'debug');
+    super.debug(this.getColoredMessage(message, stack, LogColors.MAGENTA));
+  }
+
   private getColoredText(text: string, color: LogColors) {
     return `${color}${text}${ENDING}`;
   }
@@ -23,23 +75,28 @@ export class LoggingService extends ConsoleLogger {
     )} ${this.getColoredText(message.toString(), color)}`;
   }
 
-  log(message: any, stack?: string, context?: string) {
-    super.log(this.getColoredMessage(message, stack, LogColors.GREEN));
-  }
+  private writeLog(message: any, stack: string, logLevel: LogLevel) {
+    const brackedStack = `[${stack}]`;
+    const date = new Date().toLocaleString('en-US', {
+      timeZone: 'UTC',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
+      day: '2-digit',
+      month: '2-digit',
+    });
 
-  error(message: any, stack?: string, context?: string) {
-    super.error(this.getColoredMessage(message, stack, LogColors.RED));
-  }
+    const msg = `[NEST] ${process.pid}  - ${date} ${logLevel
+      .toUpperCase()
+      .padStart(7, ' ')} ${brackedStack} ${message.toString()}`;
 
-  warn(message: any, stack?: string, context?: string) {
-    super.warn(this.getColoredMessage(message, stack, LogColors.YELLOW));
-  }
+    const errorLevels: LogLevel[] = ['warn', 'error'];
 
-  verbose(message: any, stack?: string, context?: string) {
-    super.verbose(this.getColoredMessage(message, stack, LogColors.CYAN));
-  }
+    if (errorLevels.includes(logLevel)) {
+      this.errorsQueue.next(msg);
+    }
 
-  debug(message: any, stack?: string, context?: string) {
-    super.debug(this.getColoredMessage(message, stack, LogColors.MAGENTA));
+    this.logsQueue.next(msg);
   }
 }
