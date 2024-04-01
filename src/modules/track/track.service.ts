@@ -1,20 +1,25 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
 import { CreateTrackDto, ITrack, UpdateTrackDto } from 'src/model';
-import { TrackRepository } from '../database/repositories/track.repository';
-import { TrackEntity } from '../database/entities/track.entity';
+import { TrackEntity } from './track.entity';
 
 @Injectable()
 export class TrackService {
-  constructor(private readonly trackRepository: TrackRepository) {}
+  constructor(
+    @InjectRepository(TrackEntity)
+    private readonly trackRepository: Repository<TrackEntity>,
+  ) {}
 
   async getAll(): Promise<ITrack[]> {
-    const tracks = this.trackRepository.findAll();
+    const tracks = await this.trackRepository.find();
     return tracks.map(this.buildResponse);
   }
 
   async getOneById(id: string): Promise<ITrack> {
-    const track = this.trackRepository.findOneBy('id', id);
+    const track = await this.trackRepository.findOneBy({ id });
     if (!track) {
       throw new NotFoundException("Track doesn't exist!");
     }
@@ -22,22 +27,25 @@ export class TrackService {
   }
 
   async add(dto: CreateTrackDto): Promise<ITrack> {
-    const track = this.trackRepository.create(dto);
+    const track = await this.trackRepository.save(
+      this.trackRepository.create(dto),
+    );
     return this.buildResponse(track);
   }
 
   async update(id: string, dto: UpdateTrackDto): Promise<ITrack> {
-    const track = this.trackRepository.findOneBy('id', id);
+    const track = await this.trackRepository.findOneBy({ id });
     if (!track) {
       throw new NotFoundException("Track doesn't exist!");
     }
-    const updatedTrack = this.trackRepository.update(id, dto);
+    const updatedTrack = Object.assign(track, dto);
+    await this.trackRepository.save(updatedTrack);
     return this.buildResponse(updatedTrack);
   }
 
   async delete(id: string) {
     await this.getOneById(id);
-    this.trackRepository.delete(id);
+    await this.trackRepository.delete(id);
   }
 
   private buildResponse(entity: TrackEntity): ITrack {
