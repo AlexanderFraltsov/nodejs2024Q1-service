@@ -31,6 +31,8 @@ services:
         - action: sync
           path: ./src
           target: /usr/src/app/src
+        - action: rebuild
+          path: package.json
     env_file:
       - .env
     environment:
@@ -42,6 +44,8 @@ services:
       - '${PORT}:${PORT}'
     restart: unless-stopped
     working_dir: /usr/src/app
+    volumes:
+      - ./logs:/usr/src/app/logs
     networks:
       - ${NETWORK}
 

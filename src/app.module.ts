@@ -4,6 +4,7 @@ import { TypeOrmModule, TypeOrmModuleAsyncOptions } from '@nestjs/typeorm';
 
 import configuration from './config/configuration';
 import { entities } from './entities';
+import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { TrackModule } from './modules/track/track.module';
 import { AlbumModule } from './modules/album/album.module';
@@ -24,6 +25,7 @@ import { FavoritesModule } from './modules/favorites/favorites.module';
         logging: false,
       }),
     }),
+    AuthModule,
     AlbumModule,
     ArtistModule,
     FavoritesModule,
